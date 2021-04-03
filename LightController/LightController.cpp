@@ -1,39 +1,65 @@
 #include "Arduino.h"
 #include "LightController.h"
 
-LightController::LightController(int frontPin,int rearPin,int leftPin,int rightPin) {
-	pinMode(frontPin, OUTPUT);
-	pinMode(rearPin, OUTPUT);
+LightController::LightController(int headlightPin, int leftPin, int rightPin) {
+	Serial.begin(9600);
+	pinMode(headlightPin, OUTPUT);
 	pinMode(leftPin, OUTPUT);
 	pinMode(rightPin, OUTPUT);
-	front_pin = frontPin;
-	rear_pin = rearPin;
+	headlight_pin = headlightPin;
 	left_pin = leftPin;
 	right_pin = rightPin;
-  blink_start = 0;
+	blink_start = 0;
+	headlight = false;
+	blinkers = false;
+	light = ' ';
+	Serial.write("LightController Initialized\n");
 }
 
 void LightController::UpdateInput(char charIn) {
-	blink_start = millis();
-	light = charIn;
-	if (charIn == 'F' or charIn == 'B' or charIn == 'L' or charIn == 'R') {
-		on = true;
-	} else {
-		on = false;
-	}
-	if (charIn == 'L' or charIn == 'R') {
-		blink = true;
-	} else {
-		blink = false;
+	if (charIn != ' ') {
+		switch(charIn) {
+			case('L'):
+			case('R'):
+			case('B'):
+				blink_start = millis();
+				light = charIn;
+				blinkers = true;
+				break;
+			case('H'):
+				headlight = true;
+				break;
+			case('l'):
+			case('r'):
+			case('b'):
+				blinkers = false;
+				break;
+			case('h'):
+				headlight = false;
+				break;
+		}
 	}
 }
 
 void LightController::Update() {
-    digitalWrite(front_pin, LOW);
-    digitalWrite(rear_pin, LOW);
-    digitalWrite(left_pin, LOW);
-    digitalWrite(right_pin, LOW);
-	if ((millis() - blink_start) % 1000 < 500) {
-		
+	if (headlight) {
+		digitalWrite(headlight_pin, HIGH);
+	} else {
+		digitalWrite(headlight_pin, LOW);
+	}
+	
+	if ((blinkers & ((millis() - blink_start) % BLINKER_TIMING < (BLINKER_TIMING/2)))) {
+		switch (light) {
+			case 'L': digitalWrite(left_pin, HIGH);
+					  break;
+			case 'R': digitalWrite(right_pin, HIGH);
+					  break;
+			case 'B': digitalWrite(right_pin, HIGH);
+					  digitalWrite(left_pin, HIGH);
+					  break;
+		}
+	} else {
+		digitalWrite(left_pin, LOW);
+		digitalWrite(right_pin, LOW);
 	}
 }
