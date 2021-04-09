@@ -37,6 +37,10 @@ void LightController::UpdateInput(char charIn) {
 			case('h'):
 				headlight = false;
 				break;
+			case('C'):
+				headlight = false;
+				blinkers = false;
+				light = charIn;
 		}
 	}
 }
