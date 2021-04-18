@@ -55,8 +55,10 @@ void LightController::Update() {
 	if ((blinkers & ((millis() - blink_start) % BLINKER_TIMING < (BLINKER_TIMING/2)))) {
 		switch (light) {
 			case 'L': digitalWrite(left_pin, HIGH);
+					  digitalWrite(right_pin, LOW);
 					  break;
 			case 'R': digitalWrite(right_pin, HIGH);
+					  digitalWrite(left_pin, LOW);
 					  break;
 			case 'B': digitalWrite(right_pin, HIGH);
 					  digitalWrite(left_pin, HIGH);
