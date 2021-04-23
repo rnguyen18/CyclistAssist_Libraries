@@ -2,8 +2,8 @@
   LightController.h - Library for controlling lights.
 */
 
-#ifndef LightController_h
-#define LightController_h
+#ifndef GrakeLightController_h
+#define BrakeLightController_h
 
 #include "Arduino.h"
 
@@ -13,6 +13,8 @@ class BrakeLightController
     BrakeLightController(int sensorPin, int outputPin);
 	void Update();
   private:
+	int sensor_pin;
+	int output_pin;
 };
 
 #endif

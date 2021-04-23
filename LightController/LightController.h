@@ -10,13 +10,15 @@
 class LightController
 {
   public:
-    LightController(int headlightPin, int leftPin, int rightPin);
+    LightController(int headlightPin, int leftPin, int rightPin, int rearPin);
 	void Update();
 	void UpdateInput(char charIn);
+	bool CheckHeadlightStatus();
   private:
 	int headlight_pin;
 	int left_pin;
 	int right_pin;
+	int rear_pin;
 	int blink_start;
     char light;
 	bool blinkers;

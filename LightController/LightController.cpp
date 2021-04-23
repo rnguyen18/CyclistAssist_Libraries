@@ -1,19 +1,19 @@
 #include "Arduino.h"
 #include "LightController.h"
 
-LightController::LightController(int headlightPin, int leftPin, int rightPin) {
-	Serial.begin(9600);
+LightController::LightController(int headlightPin, int leftPin, int rightPin, int rearPin) {
 	pinMode(headlightPin, OUTPUT);
 	pinMode(leftPin, OUTPUT);
 	pinMode(rightPin, OUTPUT);
+	pinMode(rearPin, OUTPUT);
 	headlight_pin = headlightPin;
 	left_pin = leftPin;
 	right_pin = rightPin;
+	rear_pin = rearPin;
 	blink_start = 0;
 	headlight = false;
 	blinkers = false;
 	light = ' ';
-	Serial.write("LightController Initialized\n");
 }
 
 void LightController::UpdateInput(char charIn) {
@@ -48,8 +48,10 @@ void LightController::UpdateInput(char charIn) {
 void LightController::Update() {
 	if (headlight) {
 		digitalWrite(headlight_pin, HIGH);
+		digitalWrite(rear_pin, HIGH);
 	} else {
 		digitalWrite(headlight_pin, LOW);
+		digitalWrite(rear_pin, LOW);
 	}
 	
 	if ((blinkers & ((millis() - blink_start) % BLINKER_TIMING < (BLINKER_TIMING/2)))) {
@@ -68,4 +70,8 @@ void LightController::Update() {
 		digitalWrite(left_pin, LOW);
 		digitalWrite(right_pin, LOW);
 	}
+}
+
+bool LightController::CheckHeadlightStatus() {
+	return headlight;
 }

@@ -10,12 +10,15 @@
 class SpeedometerController
 {
   public:
-    SpeedometerController(int sensorPin, int outputPin);
-	void Update();
+    SpeedometerController(int sensorPin);
+	int Update();
   private:
-	bool on;
-	static const int SEND_TIMING = 1000;
-	int rotations;
+	int sensor_pin;
+	unsigned long time;
+	int on;
+	static const int SEND_TIMING = 500;
+	unsigned long start_revolution;
+	int period;
 };
 
 #endif

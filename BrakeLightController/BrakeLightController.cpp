@@ -1,13 +1,14 @@
 #include "Arduino.h"
-#include "LightController.h"
+#include "BrakeLightController.h"
 
 BrakeLightController::BrakeLightController(int sensorPin, int outputPin) {
 	pinMode(sensorPin, INPUT_PULLUP);
 	pinMode(outputPin, OUTPUT);
-	Serial.write("BrakeLightController Initialized\n");
+	sensor_pin = sensorPin;
+	output_pin = outputPin;
 }
 
 void BrakeLightController::Update() {
-	int sensorVal = digitalRead(sensorPin);
-	digitalWrite(outputPin, sensorVal);
+	int sensorVal = digitalRead(sensor_pin);
+	digitalWrite(output_pin, sensorVal);
 }
